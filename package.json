@@ -44,6 +44,7 @@
     "query-string": "^8.2.0",
     "radix-vue": "^1.4.8",
     "stripe": "^14.18.0",
+    "svix": "^1.21.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "vee-validate": "^4.12.5",
