@@ -1,10 +1,12 @@
 import { Webhook } from "svix";
 import { clerkClient } from 'h3-clerk';
-import { createUser, deleteUser, updateUser } from "../../../lib/actions/user.actions";
+import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
 
 export default defineEventHandler(async (event) => {
     const { auth } = await event.context;
     const body = await readBody(event);
+
+    console.log(auth)
 
     // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
