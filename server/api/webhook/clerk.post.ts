@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import { clerkClient } from 'h3-clerk';
-import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
+import { createUser, deleteUser, updateUser } from "../../../lib/actions/user.actions";
 
 export default defineEventHandler(async (event) => {
     const { auth } = await event.context;
