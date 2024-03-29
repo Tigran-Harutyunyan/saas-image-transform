@@ -4,6 +4,8 @@ import { type TransformationTypeKey } from "@/types";
 import { type IImage } from "@/lib/database/models/image.model";
 import { toast } from "vue-sonner";
 
+definePageMeta({ middleware: "auth" });
+
 const user = await $fetch("/api/user");
 
 const route = useRoute();

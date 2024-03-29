@@ -6,6 +6,8 @@ import { getImageSize } from "@/lib/utils";
 import { toast } from "vue-sonner";
 import type { TransformationTypeKey, Image } from "@/types";
 
+definePageMeta({ middleware: "auth" });
+
 const { state } = useClerkProvide();
 
 const route = useRoute();

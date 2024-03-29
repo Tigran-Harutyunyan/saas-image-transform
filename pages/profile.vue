@@ -1,4 +1,6 @@
 <script setup lang="ts">
+definePageMeta({ middleware: "auth" });
+
 const user = await $fetch("/api/user");
 const { images, page } = useImages(user._id);
 </script>

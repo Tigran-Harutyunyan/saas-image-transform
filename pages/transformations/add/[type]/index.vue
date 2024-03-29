@@ -2,6 +2,8 @@
 import { transformationTypes } from "@/constants";
 import { type TransformationTypeKey } from "@/types";
 
+definePageMeta({ middleware: "auth" });
+
 const user = await $fetch("/api/user");
 
 const route = useRoute();
