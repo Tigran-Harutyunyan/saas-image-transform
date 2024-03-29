@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { transformationTypes } from "@/constants";
+import { type TransformationTypeKey } from "@/types";
+
+const user = await $fetch("/api/user");
 
 const route = useRoute();
 
-console.log(route.params?.type);
+const type = route.params?.type as TransformationTypeKey;
 
-const type = route.params?.type as string;
-
-if (!type) navigateTo("/");
+if (!(type && Object.keys(transformationTypes).includes(type))) {
+  navigateTo("/");
+}
 
 const transformation = transformationTypes[type];
 </script>
@@ -16,11 +19,13 @@ const transformation = transformationTypes[type];
   <Header :title="transformation.title" :subtitle="transformation.subTitle" />
 
   <section class="mt-10">
-    <!-- <TransformationForm
-      action="Add"
-      :userId="user._id"
-      :type="transformation.type as TransformationTypeKey"
-      :creditBalance="user.creditBalance"
-    /> -->
+    <ClientOnly>
+      <TransformationForm
+        action="Add"
+        :userId="user?._id"
+        :type="transformation.type"
+        :creditBalance="user?.creditBalance"
+      />
+    </ClientOnly>
   </section>
 </template>
