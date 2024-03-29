@@ -11,15 +11,14 @@ import { Button } from "@/components/ui/button";
 import Search from "@/components/Search.vue";
 
 const emit = defineEmits(["pageChange"]);
-const router = useRouter();
 
 interface Props {
   images: IImage[];
-  totalPages?: number;
+  totalPages: number;
   hasSearch?: boolean;
 }
 
-const { hasSearch = false, images, totalPages = 1 } = defineProps<Props>();
+const { hasSearch = false, images, totalPages } = defineProps<Props>();
 const page = ref(1);
 
 const onPageChange = (action: string) => {
@@ -33,7 +32,7 @@ const onPageChange = (action: string) => {
     value: pageValue,
   });
 
-  router.push(newUrl, { scroll: false });
+  navigateTo(newUrl);
   emit("pageChange");
 };
 
@@ -43,7 +42,7 @@ const getPageNumber = () => {
 };
 
 watch(
-  () => useRoute().path,
+  () => useRoute().fullPath,
   () => {
     page.value = getPageNumber();
   },

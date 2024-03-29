@@ -384,3 +384,8 @@ body > div:first-of-type {
   font-weight: 600;
   color: #384262;
 }
+
+
+.uploader-container {
+  margin-top: 0 !important;
+}

@@ -16,14 +16,14 @@ const debouncedFn = useDebounceFn(() => {
       value: query.value,
     });
 
-    router.push(newUrl, { scroll: false });
+    router.push(newUrl);
   } else {
     const newUrl = removeKeysFromQuery({
       searchParams: locationSearch,
       keysToRemove: ["query"],
     });
 
-    router.push(newUrl, { scroll: false });
+    router.push(newUrl);
   }
 }, 300);
 
