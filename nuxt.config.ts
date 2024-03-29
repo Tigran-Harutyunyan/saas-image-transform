@@ -33,8 +33,8 @@ export default defineNuxtConfig({
       appUrl: process.env.NUXT_PUBLIC_APP_URL,
     },
     clerkSecretKey: process.env.CLERK_SECRET_KEY,
-    // stripeKey: process.env.STRIPE_API_KEY,
-    // stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET
+    stripeKey: process.env.STRIPE_API_KEY,
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET
   },
 
 });
