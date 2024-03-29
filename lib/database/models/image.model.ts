@@ -1,14 +1,14 @@
-import { Document, Schema, model, models } from "mongoose";
+import mongoose, { Document, Schema, model, models } from "mongoose";
 
 export interface IImage extends Document {
   title: string;
   transformationType: string;
   publicId: string;
-  secureURL: string; 
+  secureURL: string;
   width?: number;
   height?: number;
-  config?: object; 
-  transformationUrl?: string; 
+  config?: object;
+  transformationUrl?: string;
   aspectRatio?: string;
   color?: string;
   prompt?: string;
@@ -38,6 +38,6 @@ const ImageSchema = new Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Image = models?.Image || model('Image', ImageSchema);
+const Image = mongoose.models?.Image || mongoose.model('Image', ImageSchema);
 
 export default Image;
