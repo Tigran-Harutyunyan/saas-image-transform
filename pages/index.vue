@@ -7,31 +7,7 @@ useHead({
   title: "Web site builder | Home",
 });
 
-const getPageNumber = () => {
-  const searchParams = new URLSearchParams(location.search);
-  return searchParams.has("page") ? Number(searchParams.get("page")) : 1;
-};
-
-const page = ref(getPageNumber());
-
-const getQuery = () => {
-  return new URLSearchParams(location.search).get("query") || "";
-};
-
-const { data: images, refresh } = useAsyncData("images", () =>
-  $fetch("/api/images", {
-    method: "post",
-    body: { page: page.value, searchQuery: getQuery() },
-  })
-);
-
-watch(
-  () => useRoute().fullPath,
-  () => {
-    page.value = getPageNumber();
-    refresh();
-  }
-);
+const { images, page } = useImages();
 </script>
 <template>
   <section class="home">
