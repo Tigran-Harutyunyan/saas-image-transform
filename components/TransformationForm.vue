@@ -135,7 +135,6 @@ const onSubmit = form.handleSubmit(async (values) => {
 
         if (newImage) {
           toast.success("Image create success");
-          form.resetForm();
           image.value = newImage;
           navigateTo(`/transformations/${newImage._id}`);
         }
