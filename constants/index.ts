@@ -1,3 +1,5 @@
+import { type transformationTypeTypings } from "@/types";
+
 export const navLinks = [
   {
     label: "Home",
@@ -119,7 +121,7 @@ export const plans = [
   },
 ];
 
-export const transformationTypes = {
+export const transformationTypes: transformationTypeTypings = {
   restore: {
     type: "restore",
     title: "Restore Image",
