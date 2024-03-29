@@ -53,6 +53,7 @@ const downloadHandler = () => {
         :restore="transformationConfig?.restore"
         :remove="transformationConfig?.remove"
         :removeBackground="transformationConfig?.removeBackground"
+        :fillBackground="transformationConfig?.fillBackground"
         :placeholder="dataUrl"
         sizes="(max-width: 767px) 100vw, 50vw"
         class="transformed-image"

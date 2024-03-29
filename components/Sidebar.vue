@@ -7,7 +7,7 @@ import { navLinks } from "@/constants";
 <template>
   <aside class="sidebar">
     <div class="flex size-full flex-col gap-4">
-      <NuxtLink too="/" class="sidebar-logo">
+      <NuxtLink to="/" class="sidebar-logo">
         <NuxtImg
           src="/assets/images/logo-text.svg"
           alt="logo"
