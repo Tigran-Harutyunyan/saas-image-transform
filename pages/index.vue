@@ -1,18 +1,37 @@
 <script setup lang="ts">
 import { navLinks } from "@/constants";
-//import { getAllImages } from "@/lib/actions/image.actions";
 
 definePageMeta({ middleware: "public" });
 
 useHead({
   title: "Web site builder | Home",
 });
-const { query } = useRoute();
 
-const page = Number(query?.page) || 1;
-const searchQuery = (query?.query as string) || "";
+const getPageNumber = () => {
+  const searchParams = new URLSearchParams(location.search);
+  return searchParams.has("page") ? Number(searchParams.get("page")) : 1;
+};
 
-const images = []; // await getAllImages({ page, searchQuery });
+const page = ref(getPageNumber());
+
+const getQuery = () => {
+  return new URLSearchParams(location.search).get("query") || "";
+};
+
+const { data: images, refresh } = useAsyncData("images", () =>
+  $fetch("/api/images", {
+    method: "post",
+    body: { page: page.value, searchQuery: getQuery() },
+  })
+);
+
+watch(
+  () => useRoute().fullPath,
+  () => {
+    page.value = getPageNumber();
+    refresh();
+  }
+);
 </script>
 <template>
   <section class="home">
@@ -33,11 +52,11 @@ const images = []; // await getAllImages({ page, searchQuery });
   </section>
 
   <section class="sm:mt-12">
-    <!-- <Collection
+    <Collection
       :hasSearch="true"
       :images="images?.data"
       :totalPages="images?.totalPage"
       :page="page"
-    /> -->
+    />
   </section>
 </template>
