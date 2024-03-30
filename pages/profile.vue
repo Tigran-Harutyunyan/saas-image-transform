@@ -3,13 +3,13 @@ definePageMeta({ middleware: "auth" });
 useHead({
   title: "Imaginify | Profile",
 });
+const { images, page, pending } = useImages();
 
 const user = await $fetch("/api/user");
 
 if (!user?._id) {
   navigateTo("/");
 }
-const { images, page } = useImages(user._id);
 </script>
 
 <template>
@@ -45,7 +45,7 @@ const { images, page } = useImages(user._id);
     </div>
   </section>
 
-  <section class="mt-8 md:mt-14">
+  <section class="mt-8 md:mt-14" v-if="!pending">
     <Collection
       :images="images?.data"
       :totalPages="images?.totalPages"

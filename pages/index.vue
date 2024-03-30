@@ -7,7 +7,7 @@ useHead({
   title: "Imaginify | Home",
 });
 
-const { images, page } = useImages();
+const { images, page } = useImages(true);
 </script>
 <template>
   <section class="home">

@@ -1,8 +1,8 @@
 import { getUserImages } from "@/lib/actions/image.actions";
+import { getUserById } from "@/lib/actions/user.actions";
 
 export default defineEventHandler(async (event) => {
     const auth = event.context.auth;
-    const params = event.context.params;
     const { page, limit = 9 } = await readBody(event);
 
     if (!(auth?.userId)) {
@@ -12,12 +12,22 @@ export default defineEventHandler(async (event) => {
         });
     };
 
+
     try {
+
+        const user = await getUserById(auth.userId);
+
+        if (!user._id) {
+            return createError({
+                statusCode: 401,
+                statusMessage: "Unauthorized"
+            });
+        }
 
         return await getUserImages({
             page,
             limit,
-            userId: params?.userId as string
+            userId: user._id as string
         })
 
 

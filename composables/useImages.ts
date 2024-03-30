@@ -1,4 +1,4 @@
-export const useImages = (userID?: string) => {
+export const useImages = (all = false) => {
 
     const getPageNumber = () => {
         const searchParams = new URLSearchParams(location.search);
@@ -7,7 +7,7 @@ export const useImages = (userID?: string) => {
 
     const page = ref(getPageNumber());
 
-    const url = userID ? `/api/user/${userID}/images` : "/api/images";
+    const url = all ? `/api/images?all=true` : "/api/user/images";
 
     const getQuery = () => {
         return new URLSearchParams(location.search).get("query") || "";
@@ -16,7 +16,7 @@ export const useImages = (userID?: string) => {
     const { data: images, refresh, pending } = useAsyncData("images", () =>
         $fetch(url, {
             method: "post",
-            body: userID ? { page: page.value } : { page: page.value, searchQuery: getQuery() },
+            body: all ? { page: page.value, searchQuery: getQuery() } : { page: page.value },
         })
     );
 
