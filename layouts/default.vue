@@ -3,7 +3,6 @@
   <main class="flex min-h-screen w-full flex-col bg-white lg:flex-row">
     <Sidebar />
     <MobileNav />
-
     <div
       class="mt-16 flex-1 overflow-auto py-8 lg:mt-0 lg:max-h-screen lg:py-10"
     >
@@ -13,7 +12,6 @@
         <slot />
       </div>
     </div>
-
     <Toaster />
   </main>
 </template>

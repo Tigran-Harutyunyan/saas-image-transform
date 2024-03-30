@@ -3,13 +3,8 @@ definePageMeta({ middleware: "auth" });
 useHead({
   title: "Imaginify | Profile",
 });
-const { images, page, pending } = useImages();
 
-const user = await $fetch("/api/user");
-
-if (!user?._id) {
-  navigateTo("/");
-}
+const user = await useFetch("/api/user");
 </script>
 
 <template>
@@ -26,7 +21,7 @@ if (!user?._id) {
           :height="50"
           class="size-9 md:size-12"
         />
-        <h2 class="h2-bold text-dark-600">{{ user.creditBalance }}</h2>
+        <h2 class="h2-bold text-dark-600">{{ user?.creditBalance }}</h2>
       </div>
     </div>
 
@@ -45,11 +40,7 @@ if (!user?._id) {
     </div>
   </section>
 
-  <section class="mt-8 md:mt-14" v-if="!pending">
-    <Collection
-      :images="images?.data"
-      :totalPages="images?.totalPages"
-      :page="page"
-    />
+  <section class="mt-8 md:mt-14">
+    <Collection />
   </section>
 </template>

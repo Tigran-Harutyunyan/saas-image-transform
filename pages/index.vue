@@ -6,8 +6,6 @@ definePageMeta({ middleware: "public" });
 useHead({
   title: "Imaginify | Home",
 });
-
-const { images, page } = useImages(true);
 </script>
 <template>
   <section class="home">
@@ -28,11 +26,6 @@ const { images, page } = useImages(true);
   </section>
 
   <section class="sm:mt-12">
-    <Collection
-      :hasSearch="true"
-      :images="images?.data"
-      :totalPages="images?.totalPage"
-      :page="page"
-    />
+    <Collection :hasSearch="true" />
   </section>
 </template>

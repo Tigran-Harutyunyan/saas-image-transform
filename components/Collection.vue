@@ -5,7 +5,7 @@ import {
   PaginationPrev,
   PaginationList,
 } from "@/components/ui/pagination";
-import { type IImage } from "@/lib/database/models/image.model";
+
 import { formUrlQuery } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Search from "@/components/Search.vue";
@@ -13,16 +13,48 @@ import Search from "@/components/Search.vue";
 const emit = defineEmits(["pageChange"]);
 
 interface Props {
-  images: IImage[];
-  totalPages: number;
   hasSearch?: boolean;
 }
 
-const { hasSearch = false, images, totalPages } = defineProps<Props>();
-const page = ref(1);
+const { hasSearch = false } = defineProps<Props>();
 
-const onPageChange = (action: string) => {
-  if (page.value < 1 || page.value > totalPages) return;
+const url = hasSearch ? `/api/images` : "/api/user/images";
+
+const getPageNumber = () => {
+  if (window?.location?.search) {
+    const searchParams = new URLSearchParams(window?.location?.search);
+    return searchParams.has("page") ? Number(searchParams.get("page")) : 1;
+  }
+  return 1;
+};
+
+const searchQuery = ref();
+
+const setQuery = () => {
+  searchQuery.value =
+    "&searchQuery=" + window?.location?.search
+      ? new URLSearchParams(window?.location?.search).get("query") ?? ""
+      : "";
+};
+
+const page = ref();
+
+const { data } = await useAsyncData(
+  "images",
+  () => $fetch(`${url}?page=${page.value}${searchQuery.value}`),
+  { watch: [page], server: true }
+);
+
+const totalPages = computed(() => {
+  return data.value?.totalPages;
+});
+
+const images = computed(() => {
+  return data.value?.data;
+});
+
+const onPageChange = async (action: string) => {
+  if (page.value < 1 || page.value > totalPages.value) return;
 
   const pageValue = action === "next" ? page.value + 1 : page.value - 1;
 
@@ -32,19 +64,16 @@ const onPageChange = (action: string) => {
     value: pageValue,
   });
 
-  navigateTo(newUrl);
-  emit("pageChange");
-};
+  page.value = pageValue;
 
-const getPageNumber = () => {
-  const searchParams = new URLSearchParams(location.search);
-  return searchParams.has("page") ? Number(searchParams.get("page")) : 1;
+  navigateTo(newUrl);
 };
 
 watch(
   () => useRoute().fullPath,
   () => {
     page.value = getPageNumber();
+    setQuery();
   },
   {
     deep: true,

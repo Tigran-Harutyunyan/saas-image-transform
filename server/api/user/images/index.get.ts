@@ -3,7 +3,7 @@ import { getUserById } from "@/lib/actions/user.actions";
 
 export default defineEventHandler(async (event) => {
     const auth = event.context.auth;
-    const { page, limit = 9 } = await readBody(event);
+    const { page } = await getQuery(event);
 
     if (!(auth?.userId)) {
         return createError({
@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
             statusMessage: "Unauthorized"
         });
     };
-
 
     try {
 
@@ -25,8 +24,8 @@ export default defineEventHandler(async (event) => {
         }
 
         return await getUserImages({
-            page,
-            limit,
+            page: Number(page),
+            limit: 9,
             userId: user._id as string
         })
 

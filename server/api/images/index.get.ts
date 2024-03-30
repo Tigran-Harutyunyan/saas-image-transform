@@ -1,21 +1,13 @@
 import { getAllImages } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
-    const auth = event.context.auth;
-    const { searchQuery, page, limit = 9 } = await readBody(event);
-
-    if (!auth.userId) {
-        return createError({
-            statusCode: 401,
-            statusMessage: "Unauthorized"
-        });
-    }
+    const { searchQuery, page, limit = 9 } = await getQuery(event);
 
     try {
         return await getAllImages({
-            searchQuery,
-            page,
-            limit
+            searchQuery: searchQuery as string,
+            page: Number(page),
+            limit: limit as number
         })
 
     } catch (error) {
