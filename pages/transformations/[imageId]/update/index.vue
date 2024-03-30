@@ -6,6 +6,10 @@ import { toast } from "vue-sonner";
 
 definePageMeta({ middleware: "auth" });
 
+useHead({
+  title: "Imaginify | Update transformation",
+});
+
 const user = await $fetch("/api/user");
 
 const route = useRoute();

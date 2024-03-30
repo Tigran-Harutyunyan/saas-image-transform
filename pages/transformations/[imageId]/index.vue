@@ -8,6 +8,10 @@ import type { TransformationTypeKey, Image } from "@/types";
 
 definePageMeta({ middleware: "auth" });
 
+useHead({
+  title: "Imaginify | Transformation details",
+});
+
 const { state } = useClerkProvide();
 
 const route = useRoute();

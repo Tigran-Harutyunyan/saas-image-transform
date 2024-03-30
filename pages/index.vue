@@ -4,7 +4,7 @@ import { navLinks } from "@/constants";
 definePageMeta({ middleware: "public" });
 
 useHead({
-  title: "Web site builder | Home",
+  title: "Imaginify | Home",
 });
 
 const { images, page } = useImages();

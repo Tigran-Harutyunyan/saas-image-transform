@@ -4,6 +4,10 @@ import { type TransformationTypeKey } from "@/types";
 
 definePageMeta({ middleware: "auth" });
 
+useHead({
+  title: "Imaginify | Create new transformation",
+});
+
 const user = await $fetch("/api/user");
 
 const route = useRoute();

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ middleware: "auth" });
+useHead({
+  title: "Imaginify | Profile",
+});
 
 const user = await $fetch("/api/user");
 const { images, page } = useImages(user._id);
