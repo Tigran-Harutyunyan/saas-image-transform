@@ -60,10 +60,9 @@ export default defineEventHandler(async (event) => {
         }
 
     } catch (error) {
-        console.log(error)
         return createError({
             statusCode: 500,
-            statusMessage: "Internal Error"
+            statusMessage: error?.message
         })
     }
 });
