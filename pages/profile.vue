@@ -5,6 +5,10 @@ useHead({
 });
 
 const user = await $fetch("/api/user");
+
+if (!user?._id) {
+  navigateTo("/");
+}
 const { images, page } = useImages(user._id);
 </script>
 
