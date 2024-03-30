@@ -36,7 +36,7 @@ export type AddImageParams = {
     color: string | undefined;
   };
   userId: string;
-  path: string;
+  path?: string;
 };
 
 export type UpdateImageParams = {
@@ -55,7 +55,8 @@ export type UpdateImageParams = {
     color: string | undefined;
   };
   userId: string;
-  path: string;
+  path?: string;
+  imageId: string
 };
 
 export type Transformations = {

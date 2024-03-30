@@ -1,6 +1,4 @@
-import { connectToDatabase } from "@/lib/database/mongoose";
-import { populateUser } from "@/lib/actions/image.actions";
-import Image from "@/lib/database/models/image.model";
+import { getImageById } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
     const auth = event.context.auth;
@@ -14,19 +12,7 @@ export default defineEventHandler(async (event) => {
     };
 
     try {
-
-        await connectToDatabase();
-
-        const image = await populateUser(Image.findById(params?.imageId));
-
-        if (!image) {
-            return {
-                error: true,
-                message: "Image not found"
-            };
-        }
-
-        return JSON.parse(JSON.stringify(image));
+        return await getImageById(params?.imageId as string);
 
     } catch (error) {
         return createError({

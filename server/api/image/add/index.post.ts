@@ -1,5 +1,4 @@
-import { connectToDatabase } from "@/lib/database/mongoose";
-import Image from "@/lib/database/models/image.model";
+import { addImage } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
 
@@ -13,15 +12,10 @@ export default defineEventHandler(async (event) => {
     };
 
     try {
-
-        await connectToDatabase();
-
-        const newImage = await Image.create({
-            ...image,
-            author: userId,
+        return await addImage({
+            image,
+            userId,
         })
-
-        return JSON.parse(JSON.stringify(newImage));
 
     } catch (error) {
         return createError({

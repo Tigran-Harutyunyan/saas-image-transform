@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { defineStripeWebhook } from '@fixers/nuxt-stripe/server';
-import { createTransaction } from "@/lib/actions/transaction.action";
+import { createTransaction } from "@/lib/actions/transaction.actions";
 /**
  * @param event - the H3 event
  * @param stipe - the Stripe instance

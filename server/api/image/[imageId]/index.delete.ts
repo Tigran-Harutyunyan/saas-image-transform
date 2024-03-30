@@ -1,4 +1,3 @@
-import { connectToDatabase } from "@/lib/database/mongoose";
 import { deleteImage } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
@@ -18,15 +17,9 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-
-        await connectToDatabase();
-
-        const response = await deleteImage(params?.imageId);
-
-        return response;
+        return await deleteImage(params?.imageId);
 
     } catch (error) {
-        console.log(error)
         return createError({
             statusCode: 500,
             statusMessage: "Internal Error"

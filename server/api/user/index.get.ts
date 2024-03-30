@@ -1,24 +1,20 @@
-import { connectToDatabase } from "@/lib/database/mongoose";
-import User from "@/lib/database/models/user.model";
+import { getUserById } from "@/lib/actions/user.actions";
 
 export default defineEventHandler(async (event) => {
 
     const auth = event.context.auth;
 
-    if (!(auth?.userId)) return;
+    if (!(auth?.userId)) {
+        return createError({
+            statusCode: 401,
+            statusMessage: "Unauthorized"
+        });
+    }
 
     try {
-
-        await connectToDatabase();
-
-        const user = await User.findOne({ clerkId: auth.userId });
-
-        if (!user) throw new Error("User not found");
-
-        return JSON.parse(JSON.stringify(user));
+        return await getUserById(auth.userId);
 
     } catch (error) {
-        console.log(error)
         return createError({
             statusCode: 500,
             statusMessage: "Internal Error"

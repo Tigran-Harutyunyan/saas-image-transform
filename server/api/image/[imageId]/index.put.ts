@@ -1,5 +1,4 @@
-import { connectToDatabase } from "@/lib/database/mongoose";
-import Image from "@/lib/database/models/image.model";
+import { updateImage } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
 
@@ -23,20 +22,11 @@ export default defineEventHandler(async (event) => {
 
     try {
 
-        await connectToDatabase();
-        const imageToUpdate = await Image.findById(params?.imageId as string);
-
-        if (!imageToUpdate || imageToUpdate.author.toHexString() !== userId) {
-            throw new Error("Unauthorized or image not found");
-        }
-
-        const updatedImage = await Image.findByIdAndUpdate(
-            imageToUpdate._id,
+        return await updateImage({
             image,
-            { new: true }
-        )
-
-        return JSON.parse(JSON.stringify(updatedImage));
+            userId,
+            imageId: params.imageId
+        })
 
     } catch (error) {
         return createError({

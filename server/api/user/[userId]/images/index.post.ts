@@ -1,12 +1,8 @@
-import { connectToDatabase } from "@/lib/database/mongoose";
-import { populateUser } from "@/lib/actions/image.actions";
-import Image from "@/lib/database/models/image.model";
+import { getUserImages } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
     const auth = event.context.auth;
-
-    const { userId } = event.context.params;
-
+    const params = event.context.params;
     const { page, limit = 9 } = await readBody(event);
 
     if (!(auth?.userId)) {
@@ -18,21 +14,12 @@ export default defineEventHandler(async (event) => {
 
     try {
 
-        await connectToDatabase();
+        return await getUserImages({
+            page,
+            limit,
+            userId: params?.userId as string
+        })
 
-        const skipAmount = (Number(page) - 1) * limit;
-
-        const images = await populateUser(Image.find({ author: userId }))
-            .sort({ updatedAt: -1 })
-            .skip(skipAmount)
-            .limit(limit);
-
-        const totalImages = await Image.find({ author: userId }).countDocuments();
-
-        return {
-            data: JSON.parse(JSON.stringify(images)),
-            totalPages: Math.ceil(totalImages / limit),
-        };
 
     } catch (error) {
         return createError({
