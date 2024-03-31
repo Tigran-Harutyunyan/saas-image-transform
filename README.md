@@ -1,6 +1,6 @@
 # Imaginify with Nuxt.js, Vue, Tailwind, MongoDB, Stripe, Cloudinary, Shadcn
 
-[Live Demo](https://imaginify-jklhq59ij-h-tigran.vercel.app)
+[Live Demo](https://imaginify-two-nu.vercel.app)
 
 Features:
 
