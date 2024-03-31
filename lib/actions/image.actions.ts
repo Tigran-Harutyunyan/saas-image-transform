@@ -4,6 +4,7 @@ import User from "../database/models/user.model";
 import Image from "../database/models/image.model";
 import type { AddImageParams, UpdateImageParams } from "@/types";
 import { v2 as cloudinary } from 'cloudinary'
+import mongoose from "mongoose";
 
 export const populateUser = (query: any) => query.populate({
   path: 'author',
@@ -41,7 +42,10 @@ export async function updateImage({ image, userId, imageId }: UpdateImageParams)
 
     const imageToUpdate = await Image.findById(imageId);
 
-    if (!imageToUpdate || imageToUpdate.author.toHexString() !== userId) {
+    const author = await User.findOne({ "clerkId": userId });
+    const authorId = author._id.toString();
+
+    if (!imageToUpdate || imageToUpdate.author.toHexString() !== authorId) {
       throw new Error("Unauthorized or image not found");
     }
 
@@ -53,6 +57,7 @@ export async function updateImage({ image, userId, imageId }: UpdateImageParams)
 
     return JSON.parse(JSON.stringify(updatedImage));
   } catch (error) {
+    console.log(error)
     handleError(error)
   }
 }
@@ -74,9 +79,7 @@ export async function deleteImage(imageId: string) {
 export async function getImageById(imageId: string) {
   try {
     await connectToDatabase();
-
     const image = await populateUser(Image.findById(imageId));
-
     if (!image) throw new Error("Image not found");
 
     return JSON.parse(JSON.stringify(image));

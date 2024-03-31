@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { transformationTypes } from "@/constants";
-import { type TransformationTypeKey } from "@/types";
+import type { TransformationTypeKey, Image } from "@/types";
 import { type IImage } from "@/lib/database/models/image.model";
-import { toast } from "vue-sonner";
 
 definePageMeta({ middleware: "auth" });
 
@@ -10,31 +9,38 @@ useHead({
   title: "Imaginify | Update transformation",
 });
 
-const user = await $fetch("/api/user");
-
 const route = useRoute();
 
 const type = route.params?.type as TransformationTypeKey;
 
 const imageId = route.params?.imageId as string;
 
-const image = await $fetch<IImage>(`/api/image/${imageId}`);
+const { data: image } = await useAsyncData<Image>(
+  "image",
+  () => $fetch(`/api/image/${imageId}`),
+  { server: false }
+);
 
-if (!image._id) {
-  toast.info("Image not found");
-  navigateTo("/");
-}
+const transformation = computed(() => {
+  return image.value
+    ? transformationTypes[image.value?.transformationType]
+    : null;
+});
 
-const transformation =
-  transformationTypes[image.transformationType as TransformationTypeKey];
+const user = await useFetch("/api/user");
 </script>
 
 <template>
-  <Header :title="transformation?.title" :subtitle="transformation?.subTitle" />
+  <Header
+    v-if="transformation"
+    :title="transformation?.title"
+    :subtitle="transformation?.subTitle"
+  />
 
   <section class="mt-10">
     <ClientOnly>
       <TransformationForm
+        v-if="user && image"
         action="Update"
         :userId="user?._id"
         :type="image?.transformationType"

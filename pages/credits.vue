@@ -9,9 +9,7 @@ useHead({
   title: "Imaginify | Credits",
 });
 
-const user = await $fetch("/api/user");
-
-if (!user._id) navigateTo("/sign-in");
+const user = await useFetch("/api/user");
 </script>
 
 <template>
