@@ -8,7 +8,7 @@ useHead({
   title: "Imaginify | Create new transformation",
 });
 
-const user = await $fetch("/api/user");
+const user = await useFetch("/api/user");
 
 const route = useRoute();
 

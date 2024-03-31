@@ -15,7 +15,7 @@ const type = route.params?.type as TransformationTypeKey;
 
 const imageId = route.params?.imageId as string;
 
-const { data: image } = await useAsyncData<Image>(
+const { data: image } = await useLazyAsyncData<Image>(
   "image",
   () => $fetch(`/api/image/${imageId}`),
   { server: false }
