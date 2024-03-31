@@ -39,7 +39,7 @@ const setQuery = () => {
 
 const page = ref();
 
-const { data } = await useLazyAsyncData(
+const { data, pending } = await useLazyAsyncData(
   "images",
   () => $fetch(`${url}?page=${page.value}${searchQuery.value}`),
   { watch: [page], server: true }
@@ -93,7 +93,8 @@ watch(
   </ul>
 
   <div v-else class="collection-empty">
-    <p class="p-20-semibold">Empty List</p>
+    <Loader v-if="pending" />
+    <p v-else class="p-20-semibold">Empty List</p>
   </div>
 
   <Pagination v-if="totalPages > 1" :total="totalPages" class="mt-10">
