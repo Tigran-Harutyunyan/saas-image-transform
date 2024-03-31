@@ -39,7 +39,7 @@ const setQuery = () => {
 
 const page = ref();
 
-const { data } = await useAsyncData(
+const { data } = await useLazyAsyncData(
   "images",
   () => $fetch(`${url}?page=${page.value}${searchQuery.value}`),
   { watch: [page], server: true }
