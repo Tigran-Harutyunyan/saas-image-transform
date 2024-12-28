@@ -26,6 +26,6 @@ useHead({
   </section>
 
   <section class="sm:mt-12">
-    <Collection :hasSearch="true" />
+    <Collection :home="true" />
   </section>
 </template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { transformationTypes } from "@/constants";
 import type { TransformationTypeKey, Image } from "@/types";
-import { type IImage } from "@/lib/database/models/image.model";
 
 definePageMeta({ middleware: "auth" });
 
@@ -12,42 +11,62 @@ useHead({
 const route = useRoute();
 
 const type = route.params?.type as TransformationTypeKey;
-
 const imageId = route.params?.imageId as string;
 
-const { data: image } = await useLazyAsyncData<Image>(
-  "image",
-  () => $fetch(`/api/image/${imageId}`),
-  { server: false }
-);
+const {
+  data: image,
+  pending: isImagePending,
+  error: imageError,
+} = await useFetch<Image>(`/api/image/${imageId}`);
 
 const transformation = computed(() => {
-  return image.value
-    ? transformationTypes[image.value?.transformationType]
-    : null;
+  if (!image.value?.transformationType) return null;
+  return (
+    transformationTypes[image.value.transformationType] || {
+      title: "Unknown Transformation",
+      subTitle: "Details unavailable",
+    }
+  );
 });
 
-const user = await useFetch("/api/user");
+const {
+  data: user,
+  pending: isUserPending,
+  error: userError,
+} = await useFetch("/api/user");
+
+const isPending = computed(() => isImagePending.value || isUserPending.value);
+const hasError = computed(() => imageError.value || userError.value);
 </script>
 
 <template>
-  <Header
-    v-if="transformation"
-    :title="transformation?.title"
-    :subtitle="transformation?.subTitle"
-  />
+  <Loader v-if="isPending" fullPage />
 
-  <section class="mt-10">
-    <ClientOnly>
-      <TransformationForm
-        v-if="user && image"
-        action="Update"
-        :userId="user?._id"
-        :type="image?.transformationType"
-        :creditBalance="user?.creditBalance"
-        :config="image.config"
-        :data="image"
-      />
-    </ClientOnly>
-  </section>
+  <template v-else-if="hasError">
+    <div class="error-state">
+      <p class="error-message">Failed to load data. Please try again later.</p>
+    </div>
+  </template>
+
+  <template v-else>
+    <Header
+      v-if="transformation"
+      :title="transformation?.title"
+      :subtitle="transformation?.subTitle"
+    />
+
+    <section class="mt-10">
+      <ClientOnly>
+        <TransformationForm
+          v-if="user && image"
+          action="Update"
+          :userId="user?._id"
+          :type="image?.transformationType"
+          :creditBalance="user?.creditBalance"
+          :config="image.config"
+          :data="image"
+        />
+      </ClientOnly>
+    </section>
+  </template>
 </template>

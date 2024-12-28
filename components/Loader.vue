@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { Loader } from "lucide-vue-next";
 
-const { fullPage } = defineProps<{
+interface LoaderProps {
   fullPage?: boolean;
-}>();
+}
+
+defineProps<LoaderProps>();
 </script>
 
 <template>

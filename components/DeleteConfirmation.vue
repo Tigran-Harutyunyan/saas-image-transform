@@ -14,11 +14,9 @@ import {
 
 import { toast } from "vue-sonner";
 
-interface Prop {
+const { imageId } = defineProps<{
   imageId: string;
-}
-
-const { imageId } = defineProps<Prop>();
+}>();
 
 const isPending = ref(false);
 
@@ -26,15 +24,12 @@ const deleteImage = async (imageId: string) => {
   isPending.value = true;
 
   try {
-    await $fetch(`/api/image/${imageId}`, {
-      method: "delete",
-    });
-
-    toast.success("Image is deleted");
-
+    await $fetch(`/api/image/${imageId}`, { method: "DELETE" });
+    toast.success("Image deleted successfully.");
     navigateTo("/");
-  } catch (error) {
-    toast.error(error?.message);
+  } catch (error: any) {
+    const errorMessage = error?.message || "An unexpected error occurred.";
+    toast.error(errorMessage);
   } finally {
     isPending.value = false;
   }

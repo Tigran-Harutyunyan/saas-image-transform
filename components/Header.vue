@@ -4,7 +4,7 @@ interface Props {
   subtitle?: string;
 }
 
-const { title, subtitle } = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
