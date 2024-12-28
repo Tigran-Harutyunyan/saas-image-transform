@@ -218,3 +218,16 @@ export interface Image {
   updatedAt: string
 }
 
+export interface PlanInclusion {
+  label: string;
+  isIncluded: boolean;
+}
+
+export interface Plan {
+  _id: number;
+  name: string;
+  icon: string;
+  price: number;
+  credits: number;
+  inclusions: PlanInclusion[];
+}

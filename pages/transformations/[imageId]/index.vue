@@ -37,35 +37,37 @@ const transformation = computed(() => {
     />
     <template v-if="image">
       <section class="mt-5 flex flex-wrap gap-4">
-        <div class="p-14-medium md:p-16-medium flex gap-2">
-          <p class="text-dark-600">Transformation:</p>
-          <p class="capitalize text-purple-400">
-            {{ image?.transformationType }}
-          </p>
-        </div>
+        <ImageDetails
+          v-if="image?.transformationType"
+          label="Transformation"
+          value="{{ image?.transformationType }}"
+        />
 
         <template v-if="image?.prompt">
           <p class="hidden text-dark-400/50 md:block">&#x25CF;</p>
-          <div class="p-14-medium md:p-16-medium flex gap-2">
-            <p class="text-dark-600">Prompt:</p>
-            <p class="capitalize text-purple-400">{{ image.prompt }}</p>
-          </div>
+          <ImageDetails
+            v-if="image?.prompt"
+            label="Prompt"
+            value="{{ image.prompt }}"
+          />
         </template>
 
         <template v-if="image.color">
           <p class="hidden text-dark-400/50 md:block">&#x25CF;</p>
-          <div class="p-14-medium md:p-16-medium flex gap-2">
-            <p class="text-dark-600">Color:</p>
-            <p class="capitalize text-purple-400">{{ image.color }}</p>
-          </div>
+          <ImageDetails
+            v-if="image.color"
+            label="Color"
+            value="{{ image.color }}"
+          />
         </template>
 
         <template v-if="image.aspectRatio">
           <p class="hidden text-dark-400/50 md:block">&#x25CF;</p>
-          <div class="p-14-medium md:p-16-medium flex gap-2">
-            <p class="text-dark-600">Aspect Ratio:</p>
-            <p class="capitalize text-purple-400">{{ image.aspectRatio }}</p>
-          </div>
+          <ImageDetails
+            v-if="image.aspectRatio"
+            label="Aspect Ratio"
+            value="{{ image.aspectRatio }}"
+          />
         </template>
       </section>
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-interface Prop {
+interface SidebarItemProps {
   link: {
     icon: string;
     label: string;
     route: string;
   };
 }
-const { link } = defineProps<Prop>();
+const { link } = defineProps<SidebarItemProps>();
 
 const route = useRoute();
 
