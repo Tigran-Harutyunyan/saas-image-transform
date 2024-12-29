@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { z } from "zod";
-import { toTypedSchema } from "@vee-validate/zod";
 import { useDebounceFn } from "@vueuse/core";
-import { type TransformationTypeKey } from "@/types";
 
 import { useForm } from "vee-validate";
 import { toast } from "vue-sonner";
+import { type TransformationTypeKey } from "@/types";
 import type { TransformationFormProps, Transformations } from "@/types/index";
 import {
   Select,
@@ -19,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -35,6 +32,8 @@ import {
 } from "@/constants";
 
 import { type AspectRatioKey, deepMergeObjects } from "@/lib/utils";
+
+const route = useRoute();
 
 const {
   action,
@@ -52,127 +51,82 @@ const isSubmitting = ref(false);
 const isTransforming = ref(false);
 const transformationConfig = ref(config);
 const isLoading = ref(false);
-const initialValues =
-  data && action === "Update"
-    ? {
-        title: data?.title,
-        aspectRatio: data?.aspectRatio,
-        color: data?.color,
-        prompt: data?.prompt,
-        publicId: data?.publicId,
-      }
-    : defaultValues;
 
-if (data && data.config) {
-  transformationConfig.value = data.config;
-}
-const formSchema = toTypedSchema(
-  z.object({
-    title: z.string().min(1, {
-      message: "Title is required.",
-    }),
-    aspectRatio: z.string().optional(),
-    color:
-      type === "recolor"
-        ? z.string().min(1, {
-            message: "Color is required.",
-          })
-        : z.string().optional(),
-    prompt:
-      type === "recolor" || type === "remove"
-        ? z.string().min(1, {
-            message: "Prompt is required.",
-          })
-        : z.string().optional(),
-    publicId: z.string().min(1, {
-      message: "Image is required.",
-    }),
-  })
-);
+const { formSchema } = useFormSchema(type, transformationType.config?.prompt);
+
+const getInitialValues = () => {
+  if (data && action === "Update") {
+    return {
+      title: data?.title,
+      aspectRatio: data?.aspectRatio,
+      color: data?.color,
+      prompt: data?.prompt,
+      publicId: data?.publicId,
+    };
+  } else {
+    return defaultValues;
+  }
+};
 
 const form = useForm({
   validationSchema: formSchema,
-  initialValues,
+  initialValues: getInitialValues(),
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true;
 
-  if (data || image.value) {
-    const { url: transformationUrl } = useCldImageUrl({
-      options: {
-        width: image.value?.width,
-        height: image.value?.height,
-        src: image.value?.publicId as string,
-        ...transformationConfig.value,
+  if (!image.value) {
+    isSubmitting.value = false;
+    return;
+  }
+
+  const { url: transformationUrl } = useCldImageUrl({
+    options: {
+      width: image.value?.width,
+      height: image.value?.height,
+      src: image.value?.publicId as string,
+      ...transformationConfig.value,
+    },
+  });
+
+  const imageData = {
+    title: values.title,
+    publicId: image.value?.publicId,
+    transformationType: type,
+    width: image.value?.width,
+    height: image.value?.height,
+    config: transformationConfig.value,
+    secureURL: image.value?.secureURL,
+    transformationURL: transformationUrl,
+    aspectRatio: values.aspectRatio,
+    prompt: values.prompt,
+    color: values.color,
+  };
+
+  const endpoint =
+    action === "Add" ? "/api/image/add" : `/api/image/${route.params.imageId}`;
+  const method = action === "Add" ? "post" : "put";
+
+  try {
+    const response = await $fetch<{ _id: string }>(endpoint, {
+      method,
+      body: {
+        image: imageData,
+        userId,
+        path: "/",
       },
     });
 
-    const imageData = {
-      title: values.title,
-      publicId: image.value?.publicId,
-      transformationType: type,
-      width: image.value?.width,
-      height: image.value?.height,
-      config: transformationConfig.value,
-      secureURL: image.value?.secureURL,
-      transformationURL: transformationUrl,
-      aspectRatio: values.aspectRatio,
-      prompt: values.prompt,
-      color: values.color,
-    };
-
-    if (action === "Add") {
-      try {
-        const newImage = await $fetch("/api/image/add", {
-          method: "post",
-          body: {
-            image: imageData,
-            userId,
-            path: "/",
-          },
-        });
-
-        if (newImage) {
-          toast.success("Image saved");
-          image.value = newImage;
-          navigateTo(`/transformations/${newImage._id}`);
-        }
-      } catch (error) {
-        toast.error(error?.message);
-      } finally {
-        isSubmitting.value = false;
-      }
+    if (response?._id) {
+      toast.success(action === "Add" ? "Image saved" : "Image update success");
+      navigateTo(`/transformations/${response._id}`);
     }
-
-    if (action === "Update") {
-      try {
-        const route = useRoute();
-
-        const imageId = route.params?.imageId as string;
-
-        const updatedImage = await $fetch(`/api/image/${imageId}`, {
-          method: "put",
-          body: {
-            image: imageData,
-            userId,
-            path: "/",
-          },
-        });
-
-        if (updatedImage) {
-          toast.success("Image update success");
-          navigateTo(`/transformations/${updatedImage._id}`);
-        }
-      } catch (error) {
-        toast.error(error?.message);
-      } finally {
-        isSubmitting.value = false;
-      }
-    }
+  } catch (error) {
+    toast.error(error?.message);
+  } finally {
+    isSubmitting.value = false;
   }
-
-  isSubmitting.value = false;
 });
 
 const onMediaUpload = (data) => {
@@ -232,7 +186,9 @@ const onSelectFieldHandler = () => {
     height: imageSize.height,
   };
 
-  newTransformation.value = transformationType.config;
+  if (transformationType.config) {
+    newTransformation.value = transformationType.config;
+  }
 };
 
 const transformBtnDisabled = computed(() => {
