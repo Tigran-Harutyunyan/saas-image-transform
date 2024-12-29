@@ -1,4 +1,4 @@
-import { type transformationTypeTypings } from "@/types";
+import type { transformationTypeTypings, aspectRatioOptionsType } from "@/types";
 
 export const navLinks = [
   {
@@ -163,7 +163,7 @@ export const transformationTypes: transformationTypeTypings = {
   },
 };
 
-export const aspectRatioOptions = {
+export const aspectRatioOptions: aspectRatioOptionsType = {
   "1:1": {
     aspectRatio: "1:1",
     label: "Square (1:1)",

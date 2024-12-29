@@ -231,3 +231,5 @@ export interface Plan {
   credits: number;
   inclusions: PlanInclusion[];
 }
+
+export type aspectRatioOptionsType = Record<string, { aspectRatio: string; label: string; width: number; height: number }>;
