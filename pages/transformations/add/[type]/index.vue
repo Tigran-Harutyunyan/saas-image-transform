@@ -8,7 +8,7 @@ useHead({
   title: "Imaginify | Create new transformation",
 });
 
-const user = await useFetch("/api/user");
+const { data: user } = await useFetch("/api/user");
 
 const route = useRoute();
 

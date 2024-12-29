@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
     const auth = event.context.auth;
     const params = event.context.params;
 
-    if (!(auth?.userId)) {
+    if (!auth?.userId) {
         return createError({
             statusCode: 401,
             statusMessage: "Unauthorized"

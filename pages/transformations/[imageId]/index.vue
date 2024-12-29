@@ -40,7 +40,7 @@ const transformation = computed(() => {
         <ImageDetails
           v-if="image?.transformationType"
           label="Transformation"
-          value="{{ image?.transformationType }}"
+          :value="image?.transformationType"
         />
 
         <template v-if="image?.prompt">
@@ -48,17 +48,13 @@ const transformation = computed(() => {
           <ImageDetails
             v-if="image?.prompt"
             label="Prompt"
-            value="{{ image.prompt }}"
+            :value="image.prompt"
           />
         </template>
 
         <template v-if="image.color">
           <p class="hidden text-dark-400/50 md:block">&#x25CF;</p>
-          <ImageDetails
-            v-if="image.color"
-            label="Color"
-            value="{{ image.color }}"
-          />
+          <ImageDetails v-if="image.color" label="Color" :value="image.color" />
         </template>
 
         <template v-if="image.aspectRatio">
@@ -66,7 +62,7 @@ const transformation = computed(() => {
           <ImageDetails
             v-if="image.aspectRatio"
             label="Aspect Ratio"
-            value="{{ image.aspectRatio }}"
+            :value="image.aspectRatio"
           />
         </template>
       </section>

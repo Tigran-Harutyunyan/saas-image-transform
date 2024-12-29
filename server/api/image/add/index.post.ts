@@ -1,10 +1,10 @@
 import { addImage } from "@/lib/actions/image.actions";
 
 export default defineEventHandler(async (event) => {
-    const auth = event.context.auth;
-    const { image } = await readBody(event)
 
-    if (!auth?.userId) {
+    const { image, userId } = await readBody(event)
+
+    if (!userId) {
         return createError({
             statusCode: 401,
             statusMessage: "Unauthorized"
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     try {
         return await addImage({
             image,
-            userId: auth.userId,
+            userId,
         })
 
     } catch (error) {
